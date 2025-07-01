@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div cointainer="mt5">
+       <form action="/send" method="post">
+           <textarea name="body" rows="4" cols="50" placeholder="Write your message here..."></textarea><br>
+           <button type="submit">Send Email</button>
+       </form>
+    </div>
+    <div>
+        <input type="file" id="fileUpload" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
+    </div>
+    <div id="excelViewer"></div>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script>
+        document.getElementById('fileUpload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const excelViewer = document.getElementById('excelViewer');
+            excelViewer.innerHTML = '';
+            if (!file) return;
+            if (
+                file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                file.type === 'application/vnd.ms-excel'
+            ) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const sheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[sheetName];
+                    const html = XLSX.utils.sheet_to_html(worksheet);
+                    excelViewer.innerHTML = html;
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                excelViewer.innerHTML = 'Please select an Excel file.';
+            }
+        });
+    </script>
+</body>
+</html>
