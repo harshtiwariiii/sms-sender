@@ -16,6 +16,7 @@ def send_email(body, email_list):
     password = "dkzwnmurfdngstji"
     subject = "hello"
     
+    
     for receiver_email in email_list:
         msg = MIMEMultipart()
         msg['From'] = sender_email
@@ -40,7 +41,7 @@ def send_mail_sytem():
     if not file:
         return "No file uploaded", 400
     df = pd.read_excel(file)
-    
+    # Try to find the email column (case-insensitive)
     email_col = None
     for col in df.columns:
         if 'email' in col.lower():
