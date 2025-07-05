@@ -6,14 +6,12 @@
     <title>Document</title>
 </head>
 <body>
-    <div cointainer="mt5">
-       <form action="/send" method="post">
+    <div class="container mt5">
+       <form action="/send" method="post" enctype="multipart/form-data">
            <textarea name="body" rows="4" cols="50" placeholder="Write your message here..."></textarea><br>
+           <input type="file" name="excel_file" id="fileUpload" accept=".xlsx,.xls" required><br><br>
            <button type="submit">Send Email</button>
        </form>
-    </div>
-    <div>
-        <input type="file" id="fileUpload" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
     </div>
     <div id="excelViewer"></div>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -25,7 +23,8 @@
             if (!file) return;
             if (
                 file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-                file.type === 'application/vnd.ms-excel'
+                file.type === 'application/vnd.ms-excel' ||
+                file.name.endsWith('.xlsx') || file.name.endsWith('.xls')
             ) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
