@@ -16,9 +16,9 @@ def import_file():
             tree.delete(*tree.get_children())  # Clear previous data
             for idx, row in df.iterrows():
                 rno = idx + 1
-                party = row.get("Party Name", "")
-                mobile = row.get("Mobile", "")
-                email = row.get("Email", "")
+                party = row.get("Name", "")
+                mobile = row.get("Phone Number", "")
+                email = row.get("Email Address", "")
                 tree.insert("", "end", values=(rno, party, mobile, email))
             messagebox.showinfo("File Imported", f"Loaded {len(df)} records from {file_path}")
         except Exception as e:
@@ -94,6 +94,26 @@ for col in columns:
     tree.heading(col, text=col)
     tree.column(col, width=150, anchor="center")
 tree.pack(fill="both", expand=True)
+
+# Load checkbox images
+checked_img = tk.PhotoImage(file="checked.png")
+unchecked_img = tk.PhotoImage(file="unchecked.png")
+
+checkbox_states = {}  # key: item id, value: bool
+
+def toggle_checkbox(event):
+    region = tree.identify("region", event.x, event.y)
+    if region == "cell":
+        col = tree.identify_column(event.x)
+        if col == "#1":  # Checkbox column
+            row_id = tree.identify_row(event.y)
+            if row_id:
+                current = checkbox_states.get(row_id, False)
+                checkbox_states[row_id] = not current
+                tree.set(row_id, "Select", "")
+                tree.item(row_id, image=checked_img if not current else unchecked_img)
+
+tree.bind("<Button-1>", toggle_checkbox)
 
 # --- Bottom Frame ---
 bottom_frame = tk.Frame(root)
